@@ -1,0 +1,12 @@
+fwend-list-item {
+	display: contents;
+}
+fwend-list {
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	width: max-content;
+	gap: .8em;
+}
+fwend-list>button {
+	grid-column: 1 / -1;
+}
