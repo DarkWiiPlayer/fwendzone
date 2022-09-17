@@ -46,6 +46,7 @@ element(class FwendList extends HTMLElement {
 		super()
 		this.json = localStorage.getItem("fwend-list") ?? "[]"
 		this.addEventListener("update", event => {
+			console.log(event.target)
 			localStorage.setItem("fwend-list", this.json)
 		})
 	}
@@ -64,6 +65,7 @@ element(class FwendList extends HTMLElement {
 						name: prompt("Name"),
 						zone: prompt("Time Zone")
 					}))
+					this.dispatchEvent(new Event("update"))
 				}})
 			)
 		}
