@@ -1,6 +1,168 @@
-fwend-list-item {
+/* Theming & stuff */
+/* =============== */
+
+:root {
+	--color-neutral-1: hsl(210deg, 5%, 5%);
+	--color-neutral-2: hsl(210deg, 5%, 15%);
+	--color-neutral-7: hsl(210deg, 5%, 70%);
+	--color-neutral-9: hsl(210deg, 5%, 95%);
+
+	--color-primary-3: hsl(280deg, 50%, 30%);
+	--color-primary-5: hsl(280deg, 50%, 50%);
+	--color-primary-7: hsl(280deg, 50%, 70%);
+
+	--color-secondary-3: hsl(220deg, 50%, 30%);
+	--color-secondary-5: hsl(220deg, 50%, 50%);
+	--color-secondary-7: hsl(220deg, 50%, 70%);
+
+	--color-tertiary-3: hsl(340deg, 50%, 30%);
+	--color-tertiary-5: hsl(340deg, 50%, 50%);
+	--color-tertiary-7: hsl(340deg, 50%, 70%);
+
+	--duration-hover: .3s;
+
+	--text-width: 40rem;
+}
+
+/* Resets */
+/* ====== */
+
+* {
+	box-sizing: border-box;
+}
+
+/* General page layout */
+/* =================== */
+
+body {
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	min-height: 100%;
+
+	background: var(--color-neutral-9);
+	color: var(--color-neutral-1);
+}
+
+p {
+	max-width: var(--text-width);
+}
+
+/* General HTML components */
+/* ======================= */
+
+h1 {
+	font-weight: unset;
+	border-bottom: .14em solid var(--color-primary-7);
+	text-align: center;
+	padding: .2em 1em;
+}
+
+.tagline {
+	font-size: 1.2em;
+	font-style: italic;
+	margin-top: 0;
+}
+
+hr {
+	width: var(--text-width);
+	border: 0;
+	border-bottom: .14em solid var(--color-neutral-7);
+	margin: 1.4em;
+	margin-bottom: 2.4em;
+}
+
+button {
+	--color: var(--color-primary-3);
+	all: unset;
+	/* layout */
+	vertical-align: center;
+	text-align: center;
+	/* styling */
+	color: white;
+	background-color: var(--color);
+	cursor: pointer;
+	padding: .6ch 1.2ch;
+	border-radius: .5ch;
+	text-shadow: .2em .2em .2em #0008;
+	transition: all var(--duration-hover);
+}
+
+button:hover {
+	--color: var(--color-primary-5);
+	box-shadow: .2em .2em .4em #0004;
+}
+
+button[confirm] { --color: var(--color-secondary-3); }
+button[confirm]:hover { --color: var(--color-secondary-5); }
+button[cancel] { --color: var(--color-tertiary-3); }
+button[cancel]:hover { --color: var(--color-tertiary-5); }
+
+dialog {
+	/* Layout */
+	padding: 1em;
+	/* Styling */
+	outline: unset;
+	border: unset;
+	border-radius: .6ch;
+	box-shadow: .3ch .4ch .8ch #0008;
+	border: .3ch solid var(--color-secondary-5)
+}
+
+dialog::backdrop {
+	backdrop-filter: blur(4px) saturate(.4);
+}
+
+dialog form {
+	--padding: 1ch;
+	display: grid;
+	gap: var(--padding);
+	grid-template-columns: repeat(2, auto);
+	margin: var(--padding);
+}
+dialog form>label {
 	display: contents;
 }
+
+.box {
+	--radius: .3em;
+	width: calc((3rem + .6rem * 2) * 9);
+	font-style: italic;
+	border-radius: var(--radius);
+	background: #8881;
+	box-shadow: .0em .1em .2em inset hsl(220deg, 8%, 80%);
+	padding: 1em 2em;
+
+	position: relative;
+	margin: 2em 0em;
+}
+
+.hint { --color: var(--color-secondary-5) }
+
+.box::after {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: .4em;
+	background-color: var(--color, transparent);
+	border-radius: var(--radius) 0 0 var(--radius);
+	content: '';
+}
+
+.box.hint::before {
+	content: "Hint: ";
+	display: inline-block;
+	font-weight: bold;
+}
+
+/* Fwend-List component */
+/* ==================== */
+
 fwend-list {
 	display: grid;
 	grid-template-columns: repeat(3, auto);
@@ -9,4 +171,8 @@ fwend-list {
 }
 fwend-list>button {
 	grid-column: 1 / -1;
+}
+
+fwend-list-item {
+	display: contents;
 }
