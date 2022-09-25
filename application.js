@@ -16,6 +16,7 @@ element(class FwendListItem extends HTMLElement {
 		super()
 		this.parts = new Object(null)
 		this.attachShadow({mode: "open"}).replaceChildren(
+			html.link({rel: "stylesheet", href: "application.css"}),
 			this.parts.name = html.span(),
 			this.parts.time = html.span(),
 			this.parts.remove = html.button('Remove', {click: handle(event => {
