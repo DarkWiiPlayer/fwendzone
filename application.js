@@ -19,16 +19,27 @@ element(class FwendListItem extends HTMLElement {
 			html.link({rel: "stylesheet", href: "application.css"}),
 			this.parts.name = html.span(),
 			this.parts.time = html.span(),
-			this.parts.remove = html.button('Remove', {click: handle(event => {
+			this.parts.remove = html.button('Remove', {part: "button", click: handle(event => {
 				const parent = this.parentElement
 				this.remove()
-				parent.dispatchEvent(new Event('update'))
+				parent.dispatchEvent(new Event('update'), {bubbles: true})
 			})}),
 		)
 	}
 
+	update(name, zone) {
+		this.name = name
+		this.zone = zone
+		this.dispatchEvent(new Event('update', {bubbles: true}))
+	}
+
 	$tick() {
-		this.parts.time.innerText = this.formatter.format(new Date().getTime())
+		if (this.formatter)
+			this.parts.time.innerText = this.formatter.format(new Date().getTime())
+	}
+
+	edit() {
+		this.dialog.showModal()
 	}
 
 	nameChanged(old, name) { this.parts.name.innerText = name }
@@ -46,10 +57,11 @@ element(class FwendList extends HTMLElement {
 	constructor() {
 		super()
 		this.json = localStorage.getItem("fwend-list") ?? "[]"
-		this.addEventListener("update", event => {
-			console.log(event.target)
-			localStorage.setItem("fwend-list", this.json)
-		})
+		this.addEventListener("update", event => this.save())
+	}
+
+	save() {
+		localStorage.setItem("fwend-list", this.json)
 	}
 
 	get json() {
@@ -61,14 +73,34 @@ element(class FwendList extends HTMLElement {
 		if (arr) {
 			this.replaceChildren(
 				...arr.map(item => html.fwendListItem(item)),
-				html.button("Add", {click: event => {
-					event.target.before(html.fwendListItem({
-						name: prompt("Name"),
-						zone: prompt("Time Zone")
-					}))
-					this.dispatchEvent(new Event("update"))
-				}})
+				this.dialog = html.dialog(html.form(
+					html.label(
+						html.span('Fwend Name'),
+						html.input({name: "name", type: 'text', placeholder: "Bestie <3"}),
+					),
+					html.label(
+						html.span("Time Zone"),
+						html.input({name: "zone", type: 'text', placeholder: "Europe/Berlin"}),
+					),
+					html.button("Close", {cancel: true, click: handle(event => this.dialog.close())}),
+					html.button("Update", {confirm: true}),
+				), {submit: handle(event => {
+					const form = event.submitter.closest('form')
+					const item = html.fwendListItem({
+						name: form.name.value,
+						zone: form.zone.value,
+					})
+					this.dialog.before(item)
+					this.dispatchEvent(new Event("update"), {bubbles: true})
+					this.dialog.close()
+				}), }),
+				html.button("Add", {click: event => this.addItemInteractive() }),
 			)
 		}
+	}
+
+	addItemInteractive() {
+		this.dialog.showModal()
+		this.dialog.querySelector("form").reset()
 	}
 })
